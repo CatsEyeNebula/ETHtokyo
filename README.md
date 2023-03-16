@@ -1,0 +1,1 @@
+# identity-aggreagation-manager-StarNameService
