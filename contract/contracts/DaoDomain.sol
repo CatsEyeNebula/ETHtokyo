@@ -4,10 +4,9 @@ import "./ERC721A.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./PassCard.sol";
 import "../Interfaces/IController.sol";
+import "./SetSubDomain.sol";
 
-
-contract DaoDomain {
-    PassCard public passcard;
+contract DaoDomain is SetSubDomain{
     IController public controller = IController(0x57f1887a8BF19b14fC0dF6Fd9B2acc9Af147eA85);
 
     constructor() {}
@@ -15,10 +14,11 @@ contract DaoDomain {
     modifier validate(uint256 tokenId) {
         address caller = passcard.ownerOf(tokenId);
         require(msg.sender == caller,"not token owner");
+        _;
     }
 
-    function claim(bytes32 _label,uint256 tokenId,string _nodename,uint256 tokenId) external validate(tokenId){
-        startDAO(_label,_nodename,tokenId);
+    function claim(bytes32 _label,uint256 tokenId,string memory _nodename) external validate(tokenId){
+        startDAO(tokenId,_label,_nodename);
     }
 
     function issueDomain(string memory nodename) external{

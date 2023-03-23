@@ -9,7 +9,7 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "./SetSubDomain.sol";
 
-contract PassCard is ERC721, Pausable, Ownable, ERC721Burnable, ERC721Enumerable {
+contract PassCard is ERC721, Pausable, Ownable, ERC721Burnable {
     using Counters for Counters.Counter;
     
     event AddressSet(address[] addr);
@@ -25,7 +25,7 @@ contract PassCard is ERC721, Pausable, Ownable, ERC721Burnable, ERC721Enumerable
         address from,
         address to,
         uint256 tokenId
-    ) external  override {
+    ) public override {
         require(_isApprovedOrOwner(tx.origin, tokenId), "ERC721: caller is not token owner or approved");
 
         _transfer(from, to, tokenId);

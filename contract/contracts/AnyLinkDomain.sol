@@ -10,7 +10,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "../Interfaces/IController.sol";
 
 
-contract NftDomain is SetSunDomain {
+contract AnyLinkDomain is SetSubDomain {
     IController public controller = IController(0x57f1887a8BF19b14fC0dF6Fd9B2acc9Af147eA85);
 
     constructor() SetSubDomain() {}
@@ -23,10 +23,10 @@ contract NftDomain is SetSunDomain {
     // }
 
     function claim(
-        bytes32 memory _label,
+        bytes32 _label,
         string memory _nodename
     ) external {
-        startDAO(_label,_nodename);
+        startAnyLink(_label,_nodename);
     }
 
     function issueDomain(string memory nodename) external{

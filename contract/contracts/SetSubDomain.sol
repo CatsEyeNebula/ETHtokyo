@@ -27,7 +27,6 @@ contract SetSubDomain {
     bytes32 Adrnode;
     bytes32 node;
     bytes a;
-    string nodename;
     IEns public ens;
     IResolver public resolver;
 
@@ -35,24 +34,20 @@ contract SetSubDomain {
         ens = IEns(0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e); // this is test network
     }
 
-    function validate() virtual {}
-
     function computeForNft(uint256 tokenId,string memory _nodename) internal {
         registant = tx.origin;
-        nodename = _nodename;
         string memory Id = Strings.toString(tokenId);
-        bytes32 _label = keccak256(abi.encodePacked(tokenId));
-        bytes32 nodehash = keccak256(abi.encodePacked(nodename));
+        bytes32 _label = keccak256(abi.encodePacked(Id));
+        bytes32 nodehash = keccak256(abi.encodePacked(_nodename));
         node = keccak256(abi.encodePacked(ETH_NODE, nodehash));
         Adrnode = keccak256(abi.encodePacked(node, _label));
         address res = ens.resolver(node);
         resolver = IResolver(res);
     }
 
-    function computeForDao(bytes32 _label,string memory nodename) internal {
+    function computeForDao(bytes32 _label,string memory _nodename) internal {
         registant = tx.origin;
-        nodename = _nodename;
-        bytes32 nodehash = keccak256(abi.encodePacked(nodename));
+        bytes32 nodehash = keccak256(abi.encodePacked(_nodename));
         node = keccak256(abi.encodePacked(ETH_NODE, nodehash));
         Adrnode = keccak256(abi.encodePacked(node, _label));
         address res = ens.resolver(node);
@@ -64,8 +59,7 @@ contract SetSubDomain {
         registant = address(0x0);
         Adrnode = 0x0;
         node = 0x0;
-        a = 0x0;
-        nodename = "";
+        a = "";
     }
 
     function startNft(uint256 tokenId,string memory _nodename) internal {
@@ -90,6 +84,16 @@ contract SetSubDomain {
         PasscardToDomain[tokenId] = _label;
     }
 
+    function startAnyLink(bytes32 _label,string memory _nodename) internal {
+        computeForDao(_label,_nodename);
+        ens.setSubnodeRecord(node, label, address(msg.sender), ens.resolver(node), 0);
+        ens.setResolver(node, ens.resolver(node));
+        resolver.setAddr(Adrnode, 60, a);
+        ens.setSubnodeOwner(node, label, registant);
+        emit sendtoEns(node, label, registant, ens.resolver(node));
+        cleardata();
+    }
+
     function transferPassCardAndSubDomain(address to,uint256 tokenId,string memory _nodename) external {
         passcard.transferFrom(msg.sender, to, tokenId);
         bytes32 _label = PasscardToDomain[tokenId];
@@ -110,7 +114,7 @@ contract SetSubDomain {
         resolver.setAddr(Adrnode, 60, a);
     }
 
-    function setSubnodeOwner() internal {
-        ens.setSubnodeOwner(node, label, address(msg.sender));
+    function setSubnodeOwner(bytes32 _node,bytes32 _label,address) internal {
+        ens.setSubnodeOwner(_node, _label, address(msg.sender));
     }
 }

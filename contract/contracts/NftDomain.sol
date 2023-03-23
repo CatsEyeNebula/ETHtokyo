@@ -9,7 +9,7 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "../Interfaces/IController.sol";
 
-contract NftDomain is SetSunDomain {
+contract NftDomain is SetSubDomain {
     INft public nft;
     IController public controller = IController(0x57f1887a8BF19b14fC0dF6Fd9B2acc9Af147eA85);
 
