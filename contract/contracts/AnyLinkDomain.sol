@@ -9,28 +9,24 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "../Interfaces/IController.sol";
 
+
 contract NftDomain is SetSunDomain {
-    INft public nft;
     IController public controller = IController(0x57f1887a8BF19b14fC0dF6Fd9B2acc9Af147eA85);
 
     constructor() SetSubDomain() {}
 
-    function setNftAddress(address nftadr) external {
-        nft = INft(nftadr);
-    }
-
-    modifier validate(uint256 tokenId, address tokenAddress) {
-        address caller = nft.ownerOf(tokenId);
-        require(msg.sender == caller, "not token owner");
-        _;
-    }
+    // modifier validate(uint256 tokenId, address tokenAddress) {
+    //     address caller = nft.ownerOf(tokenId);
+    //     require(tx.origin == caller, "not token owner");
+    //     registant = tx.origin;
+    //     _;
+    // }
 
     function claim(
-        uint256 tokenId,
-        address tokenAddress,
+        bytes32 memory _label,
         string memory _nodename
-    ) external validate(tokenId, tokenAddress) {
-       startNft(tokenId,_nodename);
+    ) external {
+        startDAO(_label,_nodename);
     }
 
     function issueDomain(string memory nodename) external{
