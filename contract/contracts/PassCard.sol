@@ -7,7 +7,6 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Burnable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
-import "./SetSubDomain.sol";
 
 contract PassCard is ERC721, Pausable, Ownable, ERC721Burnable {
     using Counters for Counters.Counter;
@@ -16,11 +15,11 @@ contract PassCard is ERC721, Pausable, Ownable, ERC721Burnable {
 
     Counters.Counter private _tokenIdCounter;
 
-    constructor() ERC721("PassCard", "PCD") {}
+    constructor(string memory name,string memory symbol) ERC721(name, symbol) {}
 
     address[] public airdropAdr;
-    SetSubDomain public subdomain;
-
+    mapping (address => uint256[]) public tokenids;
+    bool public revokable;
     function transferFrom(
         address from,
         address to,
@@ -43,6 +42,11 @@ contract PassCard is ERC721, Pausable, Ownable, ERC721Burnable {
         uint256 tokenId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
         _safeMint(to, tokenId);
+        tokenids[to].push(tokenId);
+    }
+
+    function getallTokenId(address _owner) view public returns(uint256[] memory) {
+        return  tokenids[_owner];
     }
 
     function _beforeTokenTransfer(address from, address to, uint256 tokenId, uint256 batchSize)
@@ -63,13 +67,13 @@ contract PassCard is ERC721, Pausable, Ownable, ERC721Burnable {
     }
 
     function multiTransferToken(
-    ) external {
+    ) public {
         require(airdropAdr.length > 0,"address null");
         uint256 len = airdropAdr.length;
         for (uint256 i; i < len; i++) {
             safeMint(airdropAdr[i]);
         }
-
+        
         delete airdropAdr;
     }
 }
