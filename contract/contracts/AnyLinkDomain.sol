@@ -47,7 +47,7 @@ contract AnyLinkDomain {
         bytes32 _label,
         string memory _nodename
     ) external {
-        startAnyLink(_label,_nodename);
+        _claim(_label,_nodename);
     }
 
     function issueDomain(string memory nodename) external{
@@ -56,7 +56,7 @@ contract AnyLinkDomain {
        controller.reclaim(id, address(this));
     }
 
-    function startAnyLink(bytes32 _label,string memory _nodename) internal {
+    function _claim(bytes32 _label,string memory _nodename) internal {
         computeForDao(_label,_nodename);
         address _resolver = ens.resolver(node);
         ens.setSubnodeRecord(node, _label, address(this),_resolver, 0);

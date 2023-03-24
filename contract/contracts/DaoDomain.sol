@@ -35,11 +35,14 @@ contract DaoDomain{
     bytes a;
     IEns public ens;
     IResolver public resolver;
+    mapping (address => string) adrToName;
+ 
 
     function setPassCard(address _adr) external {
         passcard = PassCard(_adr);
     }
 
+    //TODO 
     modifier validate(uint256 tokenId) {
         address caller = passcard.ownerOf(tokenId);
         require(msg.sender == caller,"not token owner");
@@ -47,10 +50,10 @@ contract DaoDomain{
     }
 
     function claim(bytes32 _label,uint256 tokenId,string memory _nodename) external validate(tokenId) {
-        startDAO(tokenId,_label,_nodename);
+        _claim(tokenId,_label,_nodename);
     }
 
-    
+
     function issueDomain(string memory nodename) external{
        bytes32 hashname = keccak256(abi.encodePacked(nodename));
        uint256 id = uint256(hashname);
@@ -58,7 +61,7 @@ contract DaoDomain{
        controllerAdr.delegatecall(abi.encodeWithSignature("reclaim(uint256,address)", id,address(this)));
     }
 
-    function startDAO(uint256 tokenId,bytes32 _label,string memory _nodename) public {
+    function _claim(uint256 tokenId,bytes32 _label,string memory _nodename) public {
         computeForDao(_label,_nodename);
         address _resolver = ens.resolver(node);
         ens.setSubnodeRecord(node, _label, address(this),_resolver, 0);
@@ -69,6 +72,7 @@ contract DaoDomain{
         cleardata();
         PasscardToDomain[tokenId] = _label;
         PasscardToBind[tokenId] = true;
+        adrToName[address(this)] = _nodename;
     }
 
     function getAllPassCard() view external returns(uint256[] memory){

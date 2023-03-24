@@ -19,7 +19,7 @@ async function main() {
 
 
   const DaoDomain = await ethers.getContractFactory("DaoDomain");
-  const daoDomain =  DaoDomain.attach("0xc4641f44Cd9E75CAd5BF3598f26D8Bf1CF63fcB8");
+  const daoDomain =  DaoDomain.attach("0x6799364DB840AFA61771eE23c31b5d76F39B118e");
 
 
   const AnyLinkDomain = await ethers.getContractFactory("AnyLinkDomain");
