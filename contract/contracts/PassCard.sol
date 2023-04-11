@@ -15,16 +15,22 @@ contract PassCard is ERC721, Pausable, Ownable, ERC721Burnable {
 
     Counters.Counter private _tokenIdCounter;
 
-    constructor(string memory name,string memory symbol) ERC721(name, symbol) {}
+    constructor(string memory name,string memory symbol,bool _revokable,bool _transferable) ERC721(name, symbol) {
+        revokable = _revokable;
+        transferable = _transferable;
+    }
 
     address[] public airdropAdr;
     mapping (address => uint256[]) public tokenids;
-    bool public revokable;
+    bool public immutable revokable;
+    bool public immutable transferable;
+
     function transferFrom(
         address from,
         address to,
         uint256 tokenId
     ) public override {
+        require(transferable,"this passcard is not transferable");
         require(_isApprovedOrOwner(tx.origin, tokenId), "ERC721: caller is not token owner or approved");
 
         _transfer(from, to, tokenId);
@@ -61,13 +67,19 @@ contract PassCard is ERC721, Pausable, Ownable, ERC721Burnable {
         for (uint i = 0; i < _arr.length; i++) sum = sum + _arr[i];
     }
 
-    function setAirDropAddr(address[] calldata _address) external{
+    function setAirDropAddr(address[] calldata _address) public onlyOwner{
         airdropAdr = _address;
         emit AddressSet(airdropAdr);
     }
 
+    function burn(uint256 tokenId) public onlyOwner override{
+        require(revokable,"this passcard is not revokable");
+        require(_isApprovedOrOwner(_msgSender(), tokenId), "caller is not token owner or approved");
+        _burn(tokenId);
+    }
+
     function multiTransferToken(
-    ) public {
+    ) public onlyOwner{
         require(airdropAdr.length > 0,"address null");
         uint256 len = airdropAdr.length;
         for (uint256 i; i < len; i++) {

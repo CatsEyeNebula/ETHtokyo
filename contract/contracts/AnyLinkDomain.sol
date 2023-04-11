@@ -1,18 +1,18 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.5.0;
 
-import "../Interfaces/IEns.sol";
-import "../Interfaces/INft.sol";
+import "../Interfaces/IENS.sol";
 import "../Interfaces/IResovler.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "../Interfaces/IController.sol";
 import "./PassCard.sol";
+import "./VerifiedENS.sol";
+import "./StorageDomain.sol";
 
-
-
-contract AnyLinkDomain {
+contract AnyLinkDomain is Ownable,VerifiedENS, StorageDomain{
     IController public controller = IController(0x57f1887a8BF19b14fC0dF6Fd9B2acc9Af147eA85);
+    StorageDomain public storagedomain;
 
     event sendtoEns(
         bytes32 node,
@@ -20,8 +20,6 @@ contract AnyLinkDomain {
         address registant,
         address resolver
     );
-    PassCard public passcard;
-    mapping(uint256 => bytes32) public PasscardToDomain;
     uint256[] public passcardId;
     bytes32 private constant ETH_NODE =
         0x93cdeb708b7545dc668eb9280176169d1c33cfd8ed6f04690a0bcc88a93fc4ae;
@@ -29,11 +27,10 @@ contract AnyLinkDomain {
     bytes32 Adrnode;
     bytes32 node;
     bytes a;
-    IEns public ens;
     IResolver public resolver;
 
     constructor() {
-        ens = IEns(0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e); // this is test network
+        ens = IENS(0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e); // this is test network
     }
 
     // modifier validate(uint256 tokenId, address tokenAddress) {
@@ -43,6 +40,10 @@ contract AnyLinkDomain {
     //     _;
     // }
 
+    function setStorafeDomainAdr(address StorageDomainAdr) public onlyOwner {
+        storagedomain = StorageDomain(StorageDomainAdr);
+    }
+
     function claim(
         bytes32 _label,
         string memory _nodename
@@ -50,14 +51,30 @@ contract AnyLinkDomain {
         _claim(_label,_nodename);
     }
 
-    function issueDomain(string memory nodename) external{
-       bytes32 hashname = keccak256(abi.encodePacked(nodename));
-       uint256 id = uint256(hashname);
-       controller.reclaim(id, address(this));
-    }
+    // function issueDomain(
+    //     string memory nodename,
+    //     address tokenAddress,
+    //     bytes32 _node
+    // ) external verify(_node) {
+    //     require(CollectionOwner == msg.sender, "not collection owner");
+    //     if (storagedomain.ProJectTeam(msg.sender, nodename) == address(0)) {
+    //         ENS_RECORD memory ens_record;
+    //         ens_record.index = 2;
+    //         ens_record.contractAddress = tokenAddress;
+    //         ens_record.domain = nodename;
+    //         storagedomain._putENS_RECORD(ens_record);
+    //         storagedomain._setProJectTeam(
+    //             msg.sender,
+    //             nodename,
+    //             ens_record.contractAddress
+    //         );
+    //     } else {
+    //         require(false, "already issued!");
+    //     }
+    // }
 
     function _claim(bytes32 _label,string memory _nodename) internal {
-        computeForDao(_label,_nodename);
+        generateAnyLinkDomain(_label,_nodename);
         address _resolver = ens.resolver(node);
         ens.setSubnodeRecord(node, _label, address(this),_resolver, 0);
         ens.setResolver(node, _resolver);
@@ -67,8 +84,8 @@ contract AnyLinkDomain {
         cleardata();
     }
 
-    function computeForDao(bytes32 _label,string memory _nodename) internal {
-        registant = tx.origin;
+    function generateAnyLinkDomain(bytes32 _label,string memory _nodename) internal {
+        registant = msg.sender;
         a = abi.encodePacked(registant);
         bytes32 nodehash = keccak256(abi.encodePacked(_nodename));
         node = keccak256(abi.encodePacked(ETH_NODE, nodehash));

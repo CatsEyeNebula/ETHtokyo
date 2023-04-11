@@ -2,7 +2,7 @@
 pragma solidity >=0.4.16 <0.9.0;
 
 
-interface IEns {
+interface IENS {
 
     function resolver(bytes32 node) external view returns (address);
 
@@ -19,6 +19,6 @@ contract Test {
 
         bytes32 node = keccak256(abi.encodePacked(ETH_NODE, nodehash));
 
-        res = IEns(ens).resolver(node);
+        res = IENS(ens).resolver(node);
     }
 }

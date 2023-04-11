@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.5.0;
 
-interface IEns {
+interface IENS {
 
     // Logged when the owner of a node assigns a new owner to a subnode.
     event NewOwner(bytes32 indexed node, bytes32 indexed label, address owner);
@@ -30,4 +30,5 @@ interface IEns {
     function ttl(bytes32 node) external view returns (uint64);
     function recordExists(bytes32 node) external view returns (bool);
     function isApprovedForAll(address owner, address operator) external view returns (bool);
+    function ownerOf(uint256 tokenId) external view returns (address owner);
 }

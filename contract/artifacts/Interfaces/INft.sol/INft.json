@@ -1,8 +1,21 @@
 {
   "_format": "hh-sol-artifact-1",
-  "contractName": "INft",
-  "sourceName": "Interfaces/INft.sol",
+  "contractName": "INFT",
+  "sourceName": "Interfaces/INFT.sol",
   "abi": [
+    {
+      "inputs": [],
+      "name": "owner",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
     {
       "inputs": [
         {

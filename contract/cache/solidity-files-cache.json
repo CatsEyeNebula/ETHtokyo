@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/Users/dev/Desktop/ETHhackathon/contract/contracts/AnyLinkDomain.sol": {
-      "lastModificationDate": 1679667305729,
-      "contentHash": "f5df69029e36bf69d84368480e9ea550",
+      "lastModificationDate": 1680520685911,
+      "contentHash": "5f2c04ba2f9de67f352c1c8fcd01daf9",
       "sourceName": "contracts/AnyLinkDomain.sol",
       "solcConfig": {
         "version": "0.8.12",
@@ -29,13 +29,14 @@
         }
       },
       "imports": [
-        "../Interfaces/IEns.sol",
-        "../Interfaces/INft.sol",
+        "../Interfaces/IENS.sol",
         "../Interfaces/IResovler.sol",
         "@openzeppelin/contracts/utils/Strings.sol",
         "@openzeppelin/contracts/access/Ownable.sol",
         "../Interfaces/IController.sol",
-        "./PassCard.sol"
+        "./PassCard.sol",
+        "./VerifiedENS.sol",
+        "./StorageDomain.sol"
       ],
       "versionPragmas": [
         ">=0.5.0"
@@ -44,9 +45,46 @@
         "AnyLinkDomain"
       ]
     },
+    "/Users/dev/Desktop/ETHhackathon/contract/contracts/VerifiedENS.sol": {
+      "lastModificationDate": 1681205358807,
+      "contentHash": "e2ec23c833758ea7d4dd7712518a45a5",
+      "sourceName": "contracts/VerifiedENS.sol",
+      "solcConfig": {
+        "version": "0.8.12",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../Interfaces/IENS.sol"
+      ],
+      "versionPragmas": [
+        ">=0.4.16 <0.9.0"
+      ],
+      "artifacts": [
+        "VerifiedENS"
+      ]
+    },
     "/Users/dev/Desktop/ETHhackathon/contract/contracts/PassCard.sol": {
-      "lastModificationDate": 1679660991724,
-      "contentHash": "a075bf1e68a72678affde53b2eab05a9",
+      "lastModificationDate": 1680762270437,
+      "contentHash": "baaf89731d80d46ebd71342eb3b28cd0",
       "sourceName": "contracts/PassCard.sol",
       "solcConfig": {
         "version": "0.8.12",
@@ -86,10 +124,10 @@
         "PassCard"
       ]
     },
-    "/Users/dev/Desktop/ETHhackathon/contract/Interfaces/INft.sol": {
-      "lastModificationDate": 1679554086179,
-      "contentHash": "0aa5194692bdd85a3d684dffccca1bd6",
-      "sourceName": "Interfaces/INft.sol",
+    "/Users/dev/Desktop/ETHhackathon/contract/Interfaces/IController.sol": {
+      "lastModificationDate": 1679561242261,
+      "contentHash": "0991b0696fab9248dc7fbc6199bf4f97",
+      "sourceName": "Interfaces/IController.sol",
       "solcConfig": {
         "version": "0.8.12",
         "settings": {
@@ -118,7 +156,7 @@
         ">=0.5.0"
       ],
       "artifacts": [
-        "INft"
+        "IController"
       ]
     },
     "/Users/dev/Desktop/ETHhackathon/contract/Interfaces/IResovler.sol": {
@@ -156,10 +194,10 @@
         "IResolver"
       ]
     },
-    "/Users/dev/Desktop/ETHhackathon/contract/Interfaces/IController.sol": {
-      "lastModificationDate": 1679561242261,
-      "contentHash": "0991b0696fab9248dc7fbc6199bf4f97",
-      "sourceName": "Interfaces/IController.sol",
+    "/Users/dev/Desktop/ETHhackathon/contract/Interfaces/IENS.sol": {
+      "lastModificationDate": 1681184503724,
+      "contentHash": "588a11f52cf22637a4b28ef5d98ef6b4",
+      "sourceName": "Interfaces/IENS.sol",
       "solcConfig": {
         "version": "0.8.12",
         "settings": {
@@ -188,79 +226,7 @@
         ">=0.5.0"
       ],
       "artifacts": [
-        "IController"
-      ]
-    },
-    "/Users/dev/Desktop/ETHhackathon/contract/Interfaces/IEns.sol": {
-      "lastModificationDate": 1679541501890,
-      "contentHash": "4eb9ac67b035ed1b3b38139b0b507099",
-      "sourceName": "Interfaces/IEns.sol",
-      "solcConfig": {
-        "version": "0.8.12",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        ">=0.5.0"
-      ],
-      "artifacts": [
-        "IEns"
-      ]
-    },
-    "/Users/dev/Desktop/ETHhackathon/contract/node_modules/@openzeppelin/contracts/utils/Strings.sol": {
-      "lastModificationDate": 1679467870784,
-      "contentHash": "396031251978f8febfd90cb62cb240ec",
-      "sourceName": "@openzeppelin/contracts/utils/Strings.sol",
-      "solcConfig": {
-        "version": "0.8.12",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "./math/Math.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "Strings"
+        "IENS"
       ]
     },
     "/Users/dev/Desktop/ETHhackathon/contract/node_modules/@openzeppelin/contracts/access/Ownable.sol": {
@@ -298,6 +264,43 @@
       ],
       "artifacts": [
         "Ownable"
+      ]
+    },
+    "/Users/dev/Desktop/ETHhackathon/contract/node_modules/@openzeppelin/contracts/utils/Strings.sol": {
+      "lastModificationDate": 1679467870784,
+      "contentHash": "396031251978f8febfd90cb62cb240ec",
+      "sourceName": "@openzeppelin/contracts/utils/Strings.sol",
+      "solcConfig": {
+        "version": "0.8.12",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./math/Math.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "Strings"
       ]
     },
     "/Users/dev/Desktop/ETHhackathon/contract/node_modules/@openzeppelin/contracts/security/Pausable.sol": {
@@ -373,7 +376,7 @@
       ]
     },
     "/Users/dev/Desktop/ETHhackathon/contract/node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol": {
-      "lastModificationDate": 1679568109415,
+      "lastModificationDate": 1679657122242,
       "contentHash": "280e85c07ea0783088aaed9a7a08e30e",
       "sourceName": "@openzeppelin/contracts/token/ERC721/ERC721.sol",
       "solcConfig": {
@@ -526,6 +529,41 @@
         "Context"
       ]
     },
+    "/Users/dev/Desktop/ETHhackathon/contract/node_modules/@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol": {
+      "lastModificationDate": 1679467870770,
+      "contentHash": "c22d4395e33763de693fd440c6fd10e1",
+      "sourceName": "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol",
+      "solcConfig": {
+        "version": "0.8.12",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IERC721Receiver"
+      ]
+    },
     "/Users/dev/Desktop/ETHhackathon/contract/node_modules/@openzeppelin/contracts/token/ERC721/IERC721.sol": {
       "lastModificationDate": 1679467870769,
       "contentHash": "eb7e61db29f31d88b3c1cef1b063d338",
@@ -561,6 +599,41 @@
       ],
       "artifacts": [
         "IERC721"
+      ]
+    },
+    "/Users/dev/Desktop/ETHhackathon/contract/node_modules/@openzeppelin/contracts/utils/Address.sol": {
+      "lastModificationDate": 1679467870728,
+      "contentHash": "f31ad6fc4bbf9c06203987220156a6ba",
+      "sourceName": "@openzeppelin/contracts/utils/Address.sol",
+      "solcConfig": {
+        "version": "0.8.12",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.1"
+      ],
+      "artifacts": [
+        "Address"
       ]
     },
     "/Users/dev/Desktop/ETHhackathon/contract/node_modules/@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol": {
@@ -635,76 +708,6 @@
       ],
       "artifacts": [
         "ERC165"
-      ]
-    },
-    "/Users/dev/Desktop/ETHhackathon/contract/node_modules/@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol": {
-      "lastModificationDate": 1679467870770,
-      "contentHash": "c22d4395e33763de693fd440c6fd10e1",
-      "sourceName": "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol",
-      "solcConfig": {
-        "version": "0.8.12",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "IERC721Receiver"
-      ]
-    },
-    "/Users/dev/Desktop/ETHhackathon/contract/node_modules/@openzeppelin/contracts/utils/Address.sol": {
-      "lastModificationDate": 1679467870728,
-      "contentHash": "f31ad6fc4bbf9c06203987220156a6ba",
-      "sourceName": "@openzeppelin/contracts/utils/Address.sol",
-      "solcConfig": {
-        "version": "0.8.12",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.1"
-      ],
-      "artifacts": [
-        "Address"
       ]
     },
     "/Users/dev/Desktop/ETHhackathon/contract/node_modules/@openzeppelin/contracts/utils/math/Math.sol": {
@@ -814,10 +817,10 @@
         "IERC721Enumerable"
       ]
     },
-    "/Users/dev/Desktop/ETHhackathon/contract/contracts/NftDomain.sol": {
-      "lastModificationDate": 1679665146113,
-      "contentHash": "e0c209d3a9317263e9d0cc89e4bbeef9",
-      "sourceName": "contracts/NftDomain.sol",
+    "/Users/dev/Desktop/ETHhackathon/contract/contracts/PassCardFactory.sol": {
+      "lastModificationDate": 1681110118390,
+      "contentHash": "0c929c1807d06cff7e55592ad8784f02",
+      "sourceName": "contracts/PassCardFactory.sol",
       "solcConfig": {
         "version": "0.8.12",
         "settings": {
@@ -842,24 +845,137 @@
         }
       },
       "imports": [
-        "../Interfaces/IEns.sol",
-        "../Interfaces/INft.sol",
-        "../Interfaces/IResovler.sol",
-        "@openzeppelin/contracts/utils/Strings.sol",
-        "@openzeppelin/contracts/access/Ownable.sol",
-        "../Interfaces/IController.sol",
-        "./PassCard.sol"
+        "./PassCard.sol",
+        "./StorageDomain.sol",
+        "@openzeppelin/contracts/access/Ownable.sol"
       ],
       "versionPragmas": [
         ">=0.5.0"
       ],
       "artifacts": [
-        "NftDomain"
+        "PassCardFactory"
+      ]
+    },
+    "/Users/dev/Desktop/ETHhackathon/contract/contracts/StorageDomain.sol": {
+      "lastModificationDate": 1681117410843,
+      "contentHash": "f7021f57ef783e33332887b391113cb5",
+      "sourceName": "contracts/StorageDomain.sol",
+      "solcConfig": {
+        "version": "0.8.12",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/access/Ownable.sol"
+      ],
+      "versionPragmas": [
+        ">=0.5.0"
+      ],
+      "artifacts": [
+        "StorageDomain"
+      ]
+    },
+    "/Users/dev/Desktop/ETHhackathon/contract/contracts/NFTDomain.sol": {
+      "lastModificationDate": 1681184648213,
+      "contentHash": "7a3875332194c931c4d81126b8eeb1e5",
+      "sourceName": "contracts/NFTDomain.sol",
+      "solcConfig": {
+        "version": "0.8.12",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../Interfaces/IENS.sol",
+        "../Interfaces/INFT.sol",
+        "../Interfaces/IResovler.sol",
+        "@openzeppelin/contracts/utils/Strings.sol",
+        "@openzeppelin/contracts/access/Ownable.sol",
+        "../Interfaces/IController.sol",
+        "./PassCard.sol",
+        "./VerifiedENS.sol",
+        "./StorageDomain.sol"
+      ],
+      "versionPragmas": [
+        ">=0.5.0"
+      ],
+      "artifacts": [
+        "NFTDomain"
+      ]
+    },
+    "/Users/dev/Desktop/ETHhackathon/contract/Interfaces/INFT.sol": {
+      "lastModificationDate": 1680069158765,
+      "contentHash": "b7b9afae3e90a0824767e7ae63feb832",
+      "sourceName": "Interfaces/INFT.sol",
+      "solcConfig": {
+        "version": "0.8.12",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        ">=0.5.0"
+      ],
+      "artifacts": [
+        "INFT"
       ]
     },
     "/Users/dev/Desktop/ETHhackathon/contract/contracts/DaoDomain.sol": {
-      "lastModificationDate": 1679667573463,
-      "contentHash": "b02ccfade9708c70cf32a231ae5961f3",
+      "lastModificationDate": 1681206659835,
+      "contentHash": "71c89c94b223afdb7386a842040ca3de",
       "sourceName": "contracts/DaoDomain.sol",
       "solcConfig": {
         "version": "0.8.12",
@@ -890,8 +1006,10 @@
         "./PassCard.sol",
         "../Interfaces/IController.sol",
         "../Interfaces/IResovler.sol",
-        "./PassCard.sol",
-        "../Interfaces/IEns.sol"
+        "../Interfaces/IENS.sol",
+        "./VerifiedENS.sol",
+        "./PassCardFactory.sol",
+        "./StorageDomain.sol"
       ],
       "versionPragmas": [
         ">=0.5.0"
@@ -1043,8 +1161,8 @@
       "artifacts": []
     },
     "/Users/dev/Desktop/ETHhackathon/contract/contracts/Test.sol": {
-      "lastModificationDate": 1679636406054,
-      "contentHash": "3f8c984bc439ff6a459fcd36f3070f8f",
+      "lastModificationDate": 1679981855843,
+      "contentHash": "bd143c05767712d178169eee9a11f471",
       "sourceName": "contracts/Test.sol",
       "solcConfig": {
         "version": "0.8.12",
@@ -1074,45 +1192,8 @@
         ">=0.4.16 <0.9.0"
       ],
       "artifacts": [
-        "IEns",
+        "IENS",
         "Test"
-      ]
-    },
-    "/Users/dev/Desktop/ETHhackathon/contract/contracts/Factory.sol": {
-      "lastModificationDate": 1679666501759,
-      "contentHash": "56509391f055357a5202fdd65bf5961f",
-      "sourceName": "contracts/Factory.sol",
-      "solcConfig": {
-        "version": "0.8.12",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "./PassCard.sol"
-      ],
-      "versionPragmas": [
-        ">=0.5.0"
-      ],
-      "artifacts": [
-        "Factory"
       ]
     }
   }

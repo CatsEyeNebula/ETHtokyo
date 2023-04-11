@@ -50,7 +50,7 @@ module.exports = {
     },
     goerli: {
       url:  `https://eth-goerli.g.alchemy.com/v2/rXT81OXA_g-Mj7IjavCHWmAB4UIvNcEV`,//'https://goerli.blockpi.network/v1/rpc/public'
-      gasPrice: 300*1000000000,
+      gasPrice: 800*100000000,
       chainId: 5,
       accounts:
         process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
