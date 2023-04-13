@@ -19,9 +19,9 @@ contract StorageDomain is Ownable{
 
     ENS_RECORD[] public ENS_RECORD_ARR;
     
-    address DaoDomain;
-    address NFTDomain;
-    address AnyLinkDomain;
+    address public DaoDomain;
+    address public NFTDomain;
+    address public AnyLinkDomain;
 
     function setAuthorityContract(address _DaoDomain,address _NFTDomain,address _AnyLinkDomain) external onlyOwner{
         DaoDomain = _DaoDomain;
@@ -29,19 +29,19 @@ contract StorageDomain is Ownable{
         AnyLinkDomain = _AnyLinkDomain;
     }
 
-    function _putENS_RECORD(ENS_RECORD memory ens_record) public returns(ENS_RECORD memory){
-        // require(msg.sender == DaoDomain || msg.sender == NFTDomain || msg.sender == AnyLinkDomain,"no authority");
+    function putENS_RECORD(uint256 _index,address contractAddress,string memory domain) external {
+        require(msg.sender == DaoDomain || msg.sender == NFTDomain || msg.sender == AnyLinkDomain,"no authority");
+        ENS_RECORD memory ens_record = ENS_RECORD(_index,contractAddress,domain);
         ENS_RECORD_ARR.push(ens_record);
-        return ens_record;
     }
 
-    function _setProJectTeam(address sender,string memory domain, address adr) public {
-        // require(msg.sender == DaoDomain || msg.sender == NFTDomain || msg.sender == AnyLinkDomain,"no authority");
+    function setProJectTeam(address sender,string memory domain, address adr) external {
+        require(msg.sender == DaoDomain || msg.sender == NFTDomain || msg.sender == AnyLinkDomain,"no authority");
         ProJectTeam[sender][domain] = adr;
     }
 
-    function _setUserSubDomain(address sender,address adr,bytes32 label,uint256 tokenId) public {
-        // require(msg.sender == DaoDomain || msg.sender == NFTDomain || msg.sender == AnyLinkDomain,"no authority");
+    function setUserSubDomain(address sender,address adr,bytes32 label,uint256 tokenId) external {
+        require(msg.sender == DaoDomain || msg.sender == NFTDomain || msg.sender == AnyLinkDomain,"no authority");
         UserSubDomain[sender][adr][label] = tokenId;
     }
 
@@ -49,7 +49,34 @@ contract StorageDomain is Ownable{
         return ENS_RECORD_ARR.length;
     }
 
-    function StorageDomainAddr() view external onlyOwner returns(address){
+    function getStorageDomainAddr() view external returns(address){
         return address(this);
     } 
+
+    function getProJectTeam(address sender,string memory domain) view external returns(address){
+        return ProJectTeam[sender][domain];
+    }
+
+    function getUserSubDomain(address sender,address contractAddress,bytes32 label) view external returns(uint256){
+        return UserSubDomain[sender][contractAddress][label];
+    }
+
+    function getENS_RECORD_ARR_ContractAddress(uint256 index) view external returns(address){
+        return ENS_RECORD_ARR[index].contractAddress;
+    }
+
+    function getENS_RECORD_ARR_Domain(uint256 index) view external returns(string memory){
+        return ENS_RECORD_ARR[index].domain;
+    }
+
+    function getDomainByAddress(address tokenAddress) view external returns (string memory) {
+        uint256 len = getENSRecordArrLength();
+        for (uint256 i = 0; i < len; i++) {
+        if (ENS_RECORD_ARR[i].contractAddress == tokenAddress) {
+            return ENS_RECORD_ARR[i].domain;
+        }
+    }
+    return ""; 
+}   
+
 }   

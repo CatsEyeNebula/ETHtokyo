@@ -74,7 +74,7 @@ contract PassCard is ERC721, Pausable, Ownable, ERC721Burnable {
 
     function burn(uint256 tokenId) public onlyOwner override{
         require(revokable,"this passcard is not revokable");
-        require(_isApprovedOrOwner(_msgSender(), tokenId), "caller is not token owner or approved");
+        require(_isApprovedOrOwner(tx.origin, tokenId), "caller is not token owner or approved");
         _burn(tokenId);
     }
 

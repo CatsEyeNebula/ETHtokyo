@@ -55,10 +55,12 @@ module.exports = {
       accounts:
         process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
     },
+    forknet:{
+      url:'http://192.168.50.129:8545/',
+      accounts:
+      process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+    }
     
-    // hardhat: {
-    //   allowUnlimitedContractSize: true
-    // },
   },
   gasReporter: {
     enabled: process.env.REPORT_GAS !== undefined,

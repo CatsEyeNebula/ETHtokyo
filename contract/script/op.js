@@ -8,16 +8,29 @@ async function main() {
     console.log("Account balance:", balance, balance > 0)
     if (balance === 0) {
         throw (`Not enough eth`)
-    }
-    const feeData = await hre.ethers.provider.getFeeData()
+    }    
     
+
+    const provider = new ethers.providers.FallbackProvider([ethers.provider], 1);
+
+    const feeData = await hre.ethers.provider.getFeeData()
+
+    const FEE_DATA = {
+        maxFeePerGas: feeData.maxFeePerGas,
+        maxPriorityFeePerGas:  ethers.utils.parseUnits("300","gwei"),
+        baseFeePerGas: feeData.lastBaseFeePerGas
+    };
+
+    provider.getFeeData = async () => FEE_DATA;
+
+    // await daoDomain.deployed({
+    //     maxPriorityFeePerGas: ethers.utils.parseUnits("300","gwei"),
+    //     maxFeePerGas: ethers.utils.parseUnits("500","gwei"),
+    //     type: 2,
+    //     baseFeePerGas: feeData.lastBaseFeePerGas,
+    // })
     const DaoDomain = await ethers.getContractFactory("DaoDomain")
     const daoDomain = await DaoDomain.deploy();
-    await daoDomain.deployed({
-        maxPriorityFeePerGas: ethers.utils.parseUnits("300","gwei"),
-        maxFeePerGas: ethers.utils.parseUnits("500","gwei"),
-        type: 2,
-    })
     console.log("daoDomain address:", daoDomain.address)
 
 }

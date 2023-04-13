@@ -3,22 +3,19 @@ pragma solidity >=0.5.0;
 import "./ERC721A.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./PassCard.sol";
-import "../Interfaces/IController.sol";
 import "../Interfaces/IResovler.sol";
 import "../Interfaces/IENS.sol";
 import "./VerifiedENS.sol";
 import "./PassCardFactory.sol";
-import  "./StorageDomain.sol";
+import "../Interfaces/IStorageDomain.sol";
 
 contract DaoDomain is VerifiedENS,PassCardFactory{
-    IController public controller =
-        IController(0x57f1887a8BF19b14fC0dF6Fd9B2acc9Af147eA85);
-
-    address controllerAdr = 0x57f1887a8BF19b14fC0dF6Fd9B2acc9Af147eA85;
+    event claimed(uint256 tokenId,address passcardAdr,address user);
     address factoryAdr;
-
-    constructor() {
+    address storagemainAddr;
+    constructor(address _storagemainAddr)PassCardFactory(_storagemainAddr) {
         ens = IENS(0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e); // this is test network
+        storagemainAddr = _storagemainAddr;
     }
 
     event sendtoEns(
@@ -38,6 +35,8 @@ contract DaoDomain is VerifiedENS,PassCardFactory{
     bytes32 node;
     bytes a;
     IResolver public resolver;
+    address[] public PassCardAddr;
+
 
     function issueDomain(
         string memory name,
@@ -46,15 +45,16 @@ contract DaoDomain is VerifiedENS,PassCardFactory{
         bool transferable,
         bool revokable,
         address[] calldata _address
-    ) external verify(_tokenId){
-        if (StorageDomain.ProJectTeam[msg.sender][name] == address(0)) {
+    ) external {
+        if (IStorageDomain(storagemainAddr).getProJectTeam(msg.sender,name) == address(0)) {
             address _passcardAdr = _deployPassCard(name, symbol,revokable,transferable);
+            PassCardAddr.push(_passcardAdr);
             passcard = PassCard(_passcardAdr);
             passcard.setAirDropAddr(_address);
             passcard.multiTransferToken();
         }
         else {
-            address _passcardAdr = StorageDomain.ProJectTeam[msg.sender][name];
+            address _passcardAdr = IStorageDomain(storagemainAddr).getProJectTeam(msg.sender,name);
             passcard = PassCard(_passcardAdr);
             passcard.setAirDropAddr(_address);
             passcard.multiTransferToken();
@@ -73,24 +73,23 @@ contract DaoDomain is VerifiedENS,PassCardFactory{
         uint256 tokenId,
         address _passcardAdr
     ) external validate(tokenId, _passcardAdr) {
-        uint256 len = getENSRecordArrLength();
+        uint256 len = storagedomain.getENSRecordArrLength();
         for (uint256 i = 0; i < len; i++) {
-            if (StorageDomain.ENS_RECORD_ARR[i].contractAddress == _passcardAdr) {
+            if (IStorageDomain(storagemainAddr).getENS_RECORD_ARR_ContractAddress(i) == _passcardAdr) {
                 require(
                     PasscardToBind[_passcardAdr][tokenId] == false,
                     "already claimed"
                 );
-                string memory _nodename = StorageDomain.ENS_RECORD_ARR[i].domain;
+                string memory _nodename = IStorageDomain(storagemainAddr).getENS_RECORD_ARR_Domain(i);
                 _claim(tokenId, _label, _nodename);
-                _setUserSubDomain(
+                IStorageDomain(storagemainAddr).setUserSubDomain(
                     msg.sender,
                     _passcardAdr,
                     _label,
                     tokenId
                 );
-            } else {
-                revert();
-            }
+                emit claimed(tokenId,_passcardAdr,msg.sender);
+            } 
         }
     }
 
@@ -194,8 +193,8 @@ contract DaoDomain is VerifiedENS,PassCardFactory{
         return PassCardFactory._getPassCardFactoryAddr();
     }
 
-    // function getStorageDomainAddr() view external returns(address){
-    //     return PassCardFactory._getStorageDomainAddr();
-    // }
+    function getStorageDomainAddress() view external returns(address){
+        return IStorageDomain(storagemainAddr).getStorageDomainAddr();
+    }
     
 }

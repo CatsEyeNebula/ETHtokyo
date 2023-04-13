@@ -6,17 +6,14 @@ import "../Interfaces/INFT.sol";
 import "../Interfaces/IResovler.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "../Interfaces/IController.sol";
 import "./PassCard.sol";
 import "./VerifiedENS.sol";
-import "./StorageDomain.sol";
+import "../Interfaces/IStorageDomain.sol";
 
-contract NFTDomain is Ownable, VerifiedENS, StorageDomain {
-    StorageDomain public storagedomain;
+contract NFTDomain is Ownable, VerifiedENS {
+    IStorageDomain public storagedomain;
     INFT public nft;
-    IController public controller =
-        IController(0x57f1887a8BF19b14fC0dF6Fd9B2acc9Af147eA85);
-    address controllerAdr = 0x57f1887a8BF19b14fC0dF6Fd9B2acc9Af147eA85;
+    event claimed(uint256 tokenId,address tokenAddress,address user);
 
     event sendtoEns(
         bytes32 node,
@@ -24,8 +21,20 @@ contract NFTDomain is Ownable, VerifiedENS, StorageDomain {
         address registant,
         address resolver
     );
-    PassCard public passcard;
-    mapping(uint256 => bytes32) public PasscardToDomain;
+
+    constructor(address _storagemainAddr) {
+        ens = IENS(0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e);
+        storagedomain = IStorageDomain(_storagemainAddr);
+    }
+
+    struct UserDomainState {
+        bool claimed;
+        string domain;
+        uint256 tokenId;
+    }
+
+    mapping(address => mapping(uint256 => bytes32)) public NFTtoDomain;
+    mapping(address => mapping(uint256 => bool)) public NFTtoBind;
     bytes32 private constant ETH_NODE =
         0x93cdeb708b7545dc668eb9280176169d1c33cfd8ed6f04690a0bcc88a93fc4ae;
     address registant;
@@ -35,17 +44,6 @@ contract NFTDomain is Ownable, VerifiedENS, StorageDomain {
     bytes32 label;
     IResolver public resolver;
     address[] public NftAddr;
-
-    mapping(address => mapping(uint256 => bytes32)) public NFTtoDomain;
-    mapping(address => mapping(uint256 => bool)) public NFTtoBind;
-
-    constructor() {
-        ens = IENS(0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e); // this is test network
-    }
-
-    function setStorafeDomainAdr(address StorageDomainAdr) public onlyOwner {
-        storagedomain = StorageDomain(StorageDomainAdr);
-    }
 
     // function setNFTAddress(address nftadr) external onlyOwner{
     //     nft = INFT(nftadr);
@@ -65,11 +63,7 @@ contract NFTDomain is Ownable, VerifiedENS, StorageDomain {
     ) {
         nft = INFT(tokenAddress);
         require(
-            keccak256(
-                abi.encodePacked(
-                    storagedomain.ProJectTeam(msg.sender, _nodename)
-                )
-            ) == keccak256(abi.encodePacked(tokenAddress))
+            checkAddress(tokenAddress),"haven't issued yet!"
         );
         address caller = nft.ownerOf(tokenId);
         require(msg.sender == caller, "not token owner");
@@ -83,56 +77,40 @@ contract NFTDomain is Ownable, VerifiedENS, StorageDomain {
     ) external validate(tokenId, tokenAddress, _nodename) {
         uint256 len = storagedomain.getENSRecordArrLength();
         for (uint256 i = 0; i < len; i++) {
-            if (ENS_RECORD_ARR[i].contractAddress == tokenAddress) {
+            if (storagedomain.getENS_RECORD_ARR_ContractAddress(i) == tokenAddress) {
                 require(
                     NFTtoBind[tokenAddress][tokenId] == false,
                     "already binded"
                 );
-                _nodename = ENS_RECORD_ARR[i].domain;
+                _nodename = storagedomain.getENS_RECORD_ARR_Domain(i);
                 _claim(tokenId,tokenAddress, _nodename);
                 string memory Id = Strings.toString(tokenId);
                 label = keccak256(abi.encodePacked(Id));
-                storagedomain._setUserSubDomain(
-                    msg.sender,
-                    tokenAddress,
-                    label,
-                    tokenId
-                );
+                storagedomain.setUserSubDomain(msg.sender, tokenAddress, label, tokenId);
                 label = 0x0;
-            } else {
-                revert();
-            }
+                emit claimed(tokenId,tokenAddress,msg.sender);
+            } 
         }
     }
 
     // 注意total supply
-    // 检查是否是owener of the collection
     function issueDomain(
         string memory nodename,
         address tokenAddress,
-        bytes32 _node
-    ) external  {
+        uint256 _tokenId
+    ) external {
         nft = INFT(tokenAddress);
         address CollectionOwner = nft.owner();
         require(CollectionOwner == msg.sender, "not collection owner");
-        if (storagedomain.ProJectTeam(msg.sender, nodename) == address(0)) {
-            ENS_RECORD memory ens_record;
-            ens_record.index = 1;
-            ens_record.contractAddress = tokenAddress;
-            ens_record.domain = nodename;
-            storagedomain._putENS_RECORD(ens_record);
-            storagedomain._setProJectTeam(
-                msg.sender,
-                nodename,
-                ens_record.contractAddress
-            );
-        } else {
-            require(false, "already issued!");
-        }
-    }
-
-    function pushNftAddr(address tokenAddress) external {
-        NftAddr.push(tokenAddress);
+        // if (
+            // storagedomain.getProJectTeam(msg.sender, nodename) == address(0)) 
+            // {
+            NftAddr.push(tokenAddress);
+            storagedomain.putENS_RECORD(1, tokenAddress, nodename);
+            storagedomain.setProJectTeam(msg.sender, nodename, tokenAddress);
+        // } else {
+        //     require(false, "already issued!");
+        // }
     }
 
     function generateNFTDomain(
@@ -171,19 +149,54 @@ contract NFTDomain is Ownable, VerifiedENS, StorageDomain {
         cleardata();
     }
 
-    function setSubnodeRecord() public {
-        ens.setSubnodeRecord(node, label, address(this), ens.resolver(node), 0);
+    function getStorageDomainAddr() view external returns(address){
+        return storagedomain.getStorageDomainAddr();
     }
 
-    function setResolver(address _resolver) public {
-        ens.setResolver(node, _resolver);
+    function checkAddress(address tokenAddress) view internal returns(bool){
+        bool flag = false;
+        uint256 len = NftAddr.length;
+        for(uint256 i = 0;i < len; i++){
+            if(NftAddr[i] == tokenAddress){
+                flag = true;
+            }
+        }
+        return flag;
+    }
+    
+    function getNftAddrArr() view external returns(address[] memory){
+        return NftAddr;
     }
 
-    function setAddr() public {
-        resolver.setAddr(Adrnode, 60, a);
+    function getNftList(address tokenAddress) view external returns(UserDomainState[] memory){
+        uint256 len = INFT(tokenAddress).totalSupply();
+        UserDomainState[] memory arr = new UserDomainState[](len);
+        for(uint256 i = 0;i < len; i++){
+            if(msg.sender == INFT(tokenAddress).ownerOf(i)){
+               UserDomainState memory userdomainstate;
+               userdomainstate.claimed = NFTtoBind[tokenAddress][i];
+               userdomainstate.tokenId = i;
+               userdomainstate.domain = storagedomain.getDomainByAddress(tokenAddress);
+               arr[i] = userdomainstate;
+            }
+        }
+        return arr;
     }
+    
 
-    function setSubnodeOwner(bytes32 _node, bytes32 _label, address) internal {
-        ens.setSubnodeOwner(_node, _label, address(msg.sender));
-    }
+    // function setSubnodeRecord() public {
+    //     ens.setSubnodeRecord(node, label, address(this), ens.resolver(node), 0);
+    // }
+
+    // function setResolver(address _resolver) public {
+    //     ens.setResolver(node, _resolver);
+    // }
+
+    // function setAddr() public {
+    //     resolver.setAddr(Adrnode, 60, a);
+    // }
+
+    // function setSubnodeOwner(bytes32 _node, bytes32 _label, address) internal {
+    //     ens.setSubnodeOwner(_node, _label, address(msg.sender));
+    // }
 }
